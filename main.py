@@ -10,7 +10,7 @@ from PIL import Image, ImageTk
 def resource_path(relative_path):
     """ Get absolute path to resource (works for dev and PyInstaller .exe) """
     try:
-        base_path = sys._MEIPASS  # Temp folder used by PyInstaller
+        base_path = sys._MEIPASS  
     except Exception:
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
@@ -200,10 +200,10 @@ class DictionaryApp:
 
 
     def on_click_outside(self, event):
-        # If suggestion window exists
+        
         if self.suggestion_window and self.suggestion_window.winfo_exists():
             widget = event.widget
-            # If clicked widget is not entry and not listbox
+            
             if widget not in (self.entry, self.listbox):
                 self.hide_suggestions()
                 
@@ -220,13 +220,13 @@ class DictionaryApp:
             self.dictionary.creatingSecondaryHashTable()
             self.search_btn.config(state="normal")
         except Exception as e:
-            # self.result_text.config(text=f"❌ Failed to load dictionary\n{e}", fg="red")
-            self.result_text.config(state="normal")   # allow editing
-            self.result_text.delete(1.0, tk.END)      # clear old text
+            
+            self.result_text.config(state="normal")   
+            self.result_text.delete(1.0, tk.END)     
             self.result_text.insert(tk.END, f"❌ Failed to load dictionary\n{e}")
             self.result_text.tag_config("error", foreground="red")  
             self.result_text.tag_add("error", "1.0", "end")
-            self.result_text.config(state="disabled") # make read-only again
+            self.result_text.config(state="disabled") 
             
     def search_word(self, e=None):
         text = self.entry.get().strip().lower()
@@ -249,7 +249,6 @@ class DictionaryApp:
 
         translated_sentence = " ".join(translated_words)
 
-        # ✅ Show Bengali text inside scrollable Text
         self.result_text.config(state="normal")
         self.result_text.delete(1.0, tk.END)
         self.result_text.insert(tk.END, translated_sentence)
@@ -259,7 +258,6 @@ class DictionaryApp:
 
 
     def show_suggestions(self, event=None):
-        # Ignore arrow keys so they can move in listbox
         if event and event.keysym in ("Up", "Down", "Return", "Escape"):
             return
 
@@ -268,18 +266,16 @@ class DictionaryApp:
             self.hide_suggestions()
             return
 
-        # ✅ Collect suggestions
         matches = [w["en"] for w in self.dictionary.words if w["en"].startswith(text)]
 
         if not matches:
             self.hide_suggestions()
             return
 
-        # ✅ Ensure typed text appears first, others alphabetically after
-        matches_sorted = sorted(set(matches))   # unique + sorted
+        matches_sorted = sorted(set(matches))   
         if text in matches_sorted:
             matches_sorted.remove(text)
-        suggestions = [text] + matches_sorted   # typed word first, rest alphabetically
+        suggestions = [text] + matches_sorted   
 
         # Create popup if not exists
         if not self.suggestion_window or not self.suggestion_window.winfo_exists():
@@ -299,7 +295,7 @@ class DictionaryApp:
             self.listbox.pack(side="left", fill="both")
 
             style = ttk.Style()
-            style.theme_use("clam")  # 'clam' allows full customization
+            style.theme_use("clam") 
             style.configure("Vertical.TScrollbar",
                             gripcount=0,
                             background="#1aa6f1",     # scrollbar background
